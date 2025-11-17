@@ -1,0 +1,73 @@
+{
+  "name": "amazon-seller-central-mcp",
+  "version": "0.1.0",
+  "description": "Model Context Protocol (MCP) server for Amazon Seller Central - Access sales data, inventory, returns, and reports through the Amazon SP-API",
+  "main": "build/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node build/index.js",
+    "watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:e2e": "jest tests/e2e",
+    "test:ci": "jest --ci --coverage --maxWorkers=2",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "clean": "rm -rf build coverage"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "amazon",
+    "seller-central",
+    "sp-api",
+    "amazon-sp-api",
+    "typescript",
+    "ai-agent",
+    "claude"
+  ],
+  "author": "Jay Trivedi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jay-trivedi/amazon_sp_mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jay-trivedi/amazon_sp_mcp/issues"
+  },
+  "homepage": "https://github.com/jay-trivedi/amazon_sp_mcp#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "aws4": "^1.13.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.2",
+    "jest": "^29.7.0",
+    "nock": "^13.5.6",
+    "prettier": "^3.4.2",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

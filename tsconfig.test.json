@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["jest", "node"],
+    "outDir": "./build-test"
+  },
+  "include": ["tests/**/*", "src/**/*"],
+  "exclude": ["node_modules", "build"]
+}
