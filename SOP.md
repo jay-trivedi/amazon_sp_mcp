@@ -85,6 +85,87 @@ When working on this codebase:
 
 ---
 
+## ⚠️ CRITICAL: ALWAYS WORK IN FEATURE BRANCHES
+
+**NEVER commit directly to main branch.**
+
+### Branching Policy
+
+**ALWAYS create a feature branch before starting work:**
+
+- ✅ **ALWAYS** create a new branch from main for each task
+- ✅ **ALWAYS** use descriptive branch names following the convention below
+- ✅ **ALWAYS** keep branches focused on a single feature/fix
+- ✅ **ALWAYS** merge to main only after all quality gates pass
+- ❌ **NEVER** commit directly to main branch
+- ❌ **NEVER** push untested code to any branch
+- ❌ **NEVER** merge without ensuring all tests pass
+
+### Branch Naming Convention
+
+```bash
+feature/phase-1-4-http-client      # For new features
+fix/rate-limiter-timing            # For bug fixes
+docs/update-setup-guide            # For documentation
+test/add-integration-tests         # For test additions
+refactor/simplify-error-handling   # For refactoring
+```
+
+### Workflow
+
+**Before starting any task:**
+
+```bash
+# 1. Ensure you're on main and it's up to date
+git checkout main
+git pull origin main
+
+# 2. Create feature branch
+git checkout -b feature/your-feature-name
+
+# 3. Work on your feature (following all 7 SOP steps)
+
+# 4. Before pushing, ensure quality gates pass
+npm run build
+npm run test:coverage
+npm run lint
+npm run type-check
+
+# 5. Commit your changes
+git add .
+git commit -m "feat: your descriptive commit message"
+
+# 6. Push feature branch
+git push origin feature/your-feature-name
+
+# 7. Only merge to main after verification
+git checkout main
+git merge feature/your-feature-name
+git push origin main
+
+# 8. Delete feature branch
+git branch -d feature/your-feature-name
+git push origin --delete feature/your-feature-name
+```
+
+### Why This Matters
+
+- **Protects main branch** from broken code
+- **Enables rollback** if something goes wrong
+- **Makes code review easier** with clear history
+- **Allows parallel work** on multiple features
+- **Prevents conflicts** with other developers
+
+### Exceptions
+
+The ONLY time you commit directly to main:
+- Initial repository setup (first commit)
+- Hotfix for critical production issue (document why)
+
+**For everything else: feature branch first, merge after validation.**
+
+---
+
 ## Workflow Steps
 
 ### Step 1: Research & Planning
@@ -654,11 +735,18 @@ Violating this rule is not acceptable:
 - Skipping tests leads to bugs
 - Skipping documentation leads to confusion
 
+### ❌ Don't Commit Directly to Main
+- **Always work in a feature branch** (see "ALWAYS WORK IN FEATURE BRANCHES" section)
+- Never commit directly to main branch
+- Merge to main only after all quality gates pass
+- Keep main branch always deployable
+
 ### ❌ Don't Commit Without Testing
 - Always run tests before committing
 - Always check coverage
 - Always lint your code
 - Never commit code that fails quality checks
+- Run quality gates before pushing to ANY branch
 
 ### ❌ Don't Leave TODOs in Code
 - Finish what you start
@@ -710,6 +798,25 @@ npm run build && npm run test:coverage && npm run lint && npm run type-check
 
 ## Version Control Best Practices
 
+### ⚠️ Always Use Feature Branches
+
+**See "ALWAYS WORK IN FEATURE BRANCHES" section above for full workflow.**
+
+**Quick reminder:**
+```bash
+# 1. Create feature branch
+git checkout -b feature/your-feature-name
+
+# 2. Work and commit
+git add .
+git commit -m "feat: your message"
+
+# 3. Push feature branch (not main!)
+git push origin feature/your-feature-name
+
+# 4. Merge to main only after all quality gates pass
+```
+
 ### Commit Messages
 Follow conventional commits format:
 
@@ -728,9 +835,10 @@ feature/orders-api-integration
 fix/rate-limiting-bug
 docs/update-readme
 test/add-e2e-tests
+refactor/simplify-error-handling
 ```
 
-### Before Pushing
+### Before Pushing (to ANY branch)
 ```bash
 # Ensure everything is clean
 npm run build
@@ -738,10 +846,25 @@ npm run test:coverage
 npm run lint
 npm run type-check
 
-# If all pass, commit and push
+# If all pass, commit and push to feature branch
 git add .
 git commit -m "feat: implement orders API integration"
-git push
+git push origin feature/your-feature-name  # Push to feature branch, NOT main
+
+# Only merge to main after verification
+```
+
+### Merging to Main
+```bash
+# Only after ALL quality gates pass:
+git checkout main
+git pull origin main           # Get latest changes
+git merge feature/your-branch  # Merge your feature
+git push origin main           # Push to main
+
+# Clean up feature branch
+git branch -d feature/your-branch
+git push origin --delete feature/your-branch
 ```
 
 ---
