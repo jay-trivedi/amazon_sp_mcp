@@ -19,44 +19,396 @@ This ensures consistent quality and maintainability across all features.
 
 **Goal**: Basic functional MCP server with core Amazon SP-API integration
 
-### Tasks
+**Timeline**: 4-6 weeks total (broken into 6 sub-phases)
 
+Phase 1 is divided into smaller sub-phases for easier implementation and tracking. Each sub-phase should be completed fully (following [SOP.md](SOP.md)) before moving to the next.
+
+---
+
+### Phase 1.1: Project Foundation ✅
+
+**Status**: ✅ COMPLETED
+**Duration**: ~1 week
+
+#### Tasks
 - [x] Project setup and architecture
 - [x] Testing infrastructure setup
-- [ ] Authentication and token management
-  - [ ] LWA OAuth 2.0 implementation
-  - [ ] Token refresh logic
-  - [ ] Credential management
-  - [ ] AWS signature v4 for SP-API
-- [ ] Basic sales data retrieval
-  - [ ] Orders API integration
-  - [ ] Order details endpoint
-  - [ ] Sales metrics calculation
-  - [ ] Date range filtering
-- [ ] Inventory data tools
-  - [ ] FBA inventory summary
-  - [ ] Inventory health metrics
-  - [ ] Stock level checks
-- [ ] Reports API integration
-  - [ ] Request report functionality
-  - [ ] Report status checking
-  - [ ] Report document download
-  - [ ] Parse common report types
+- [x] Documentation structure (README, SOP, TESTING, ROADMAP)
+- [x] Git repository initialization
+- [x] GitHub repository creation
 
-### Deliverables
+#### Deliverables
+- [x] Complete documentation framework
+- [x] Testing guidelines and infrastructure
+- [x] GitHub repository with initial commit
 
-- Working MCP server executable
-- Core tools: `get_orders`, `get_inventory_summary`, `request_report`
-- Unit tests for authentication and core tools
-- Basic documentation
+#### Success Criteria
+- [x] All documentation files created and reviewed
+- [x] SOP workflow defined for future development
+- [x] Repository publicly accessible on GitHub
 
-### Success Criteria
+---
 
-- MCP server connects to Amazon SP-API successfully
-- Can retrieve orders from last 30 days
-- Can check FBA inventory levels
-- Can request and download a sales report
-- 80%+ test coverage for implemented features
+### Phase 1.2: TypeScript/Node.js Setup
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~3-4 days
+**Dependencies**: Phase 1.1
+
+#### Tasks
+- [ ] Initialize npm project (`package.json`)
+- [ ] Configure TypeScript (`tsconfig.json`, `tsconfig.test.json`)
+- [ ] Install core dependencies:
+  - [ ] `@modelcontextprotocol/sdk`
+  - [ ] `typescript`, `ts-node`
+  - [ ] Development tools (ESLint, Prettier)
+- [ ] Install testing dependencies:
+  - [ ] `jest`, `ts-jest`, `@types/jest`
+  - [ ] `nock` for HTTP mocking
+- [ ] Configure build scripts (`npm run build`, `npm run dev`)
+- [ ] Configure test scripts (all test commands from TESTING.md)
+- [ ] Create basic project structure (empty directories)
+- [ ] Write a "Hello World" MCP server to verify setup
+
+#### Deliverables
+- [ ] `package.json` with all dependencies
+- [ ] `tsconfig.json` configured
+- [ ] Build system working (`npm run build` succeeds)
+- [ ] Test system working (`npm test` runs)
+- [ ] Basic MCP server boots successfully
+
+#### Success Criteria
+- [ ] `npm run build` compiles without errors
+- [ ] `npm test` runs (even with no tests yet)
+- [ ] Can run MCP server with `node build/index.js`
+- [ ] TypeScript types are properly configured
+- [ ] Linter runs without errors
+
+---
+
+### Phase 1.3: Authentication System
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~1 week
+**Dependencies**: Phase 1.2
+
+#### Tasks
+- [ ] **Environment configuration**
+  - [ ] Create `.env` support with `dotenv`
+  - [ ] Load AWS and LWA credentials from environment
+  - [ ] Validate required environment variables on startup
+
+- [ ] **LWA OAuth 2.0 implementation**
+  - [ ] Implement token exchange (refresh token → access token)
+  - [ ] Create `TokenManager` class
+  - [ ] Add token caching (in-memory)
+  - [ ] Add token expiration checking
+  - [ ] Implement automatic token refresh
+
+- [ ] **AWS Signature V4**
+  - [ ] Install `aws4` or similar library
+  - [ ] Implement request signing for SP-API calls
+  - [ ] Create signature helper functions
+
+- [ ] **Credential management**
+  - [ ] Create `Credentials` class/interface
+  - [ ] Implement credential validation
+  - [ ] Add error handling for missing/invalid credentials
+
+#### Deliverables
+- [ ] `src/auth/credentials.ts` - Credential management
+- [ ] `src/auth/token-manager.ts` - LWA token handling
+- [ ] `src/config/sp-api.ts` - SP-API configuration
+- [ ] Unit tests for all auth components (≥80% coverage)
+- [ ] Integration test for token refresh flow
+
+#### Success Criteria
+- [ ] Can successfully obtain access token from LWA
+- [ ] Access tokens are cached and reused
+- [ ] Expired tokens are automatically refreshed
+- [ ] AWS Signature V4 is correctly generated
+- [ ] All tests pass with ≥80% coverage
+- [ ] Error handling works for invalid credentials
+
+---
+
+### Phase 1.4: SP-API HTTP Client & Rate Limiting
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~4-5 days
+**Dependencies**: Phase 1.3
+
+#### Tasks
+- [ ] **HTTP Client implementation**
+  - [ ] Install HTTP client library (`axios` or `node-fetch`)
+  - [ ] Create `SPAPIClient` base class
+  - [ ] Add request method with auth headers
+  - [ ] Add AWS signature to all requests
+  - [ ] Add LWA access token to headers
+  - [ ] Implement response parsing
+
+- [ ] **Error handling**
+  - [ ] Create custom error classes (`SPAPIError`)
+  - [ ] Handle HTTP errors (4xx, 5xx)
+  - [ ] Parse SP-API error responses
+  - [ ] Implement retry logic for transient failures (429, 503)
+
+- [ ] **Rate limiting**
+  - [ ] Create `RateLimiter` utility
+  - [ ] Implement token bucket algorithm
+  - [ ] Add rate limits per endpoint (from SP-API docs)
+  - [ ] Queue requests when rate limit reached
+  - [ ] Add configurable rate limits
+
+#### Deliverables
+- [ ] `src/utils/sp-api-client.ts` - HTTP client
+- [ ] `src/utils/rate-limiter.ts` - Rate limiting
+- [ ] `src/types/sp-api.d.ts` - Type definitions
+- [ ] `src/utils/errors.ts` - Error classes
+- [ ] Unit tests for client and rate limiter
+- [ ] Integration tests with mocked HTTP responses
+
+#### Success Criteria
+- [ ] Can make authenticated requests to SP-API
+- [ ] Rate limiting prevents quota exceeded errors
+- [ ] Retries work for transient failures
+- [ ] Error messages are clear and actionable
+- [ ] All tests pass with ≥80% coverage
+- [ ] Mock tests verify correct headers and signatures
+
+---
+
+### Phase 1.5: Orders/Sales Tools
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~1 week
+**Dependencies**: Phase 1.4
+
+#### Tasks
+- [ ] **Orders API client methods**
+  - [ ] Implement `SPAPIClient.getOrders(params)`
+  - [ ] Implement `SPAPIClient.getOrder(orderId)`
+  - [ ] Add pagination support for large result sets
+  - [ ] Add date range filtering
+  - [ ] Add order status filtering
+
+- [ ] **MCP Tools**
+  - [ ] Create `get_orders` tool
+    - Input: startDate, endDate, orderStatuses (optional)
+    - Output: List of orders with key details
+  - [ ] Create `get_order_details` tool
+    - Input: orderId
+    - Output: Complete order information
+  - [ ] Create `get_sales_metrics` tool (optional)
+    - Input: startDate, endDate
+    - Output: Aggregated metrics (revenue, units, etc.)
+
+- [ ] **Data formatting**
+  - [ ] Format order data for readability
+  - [ ] Calculate totals and summaries
+  - [ ] Handle different currencies
+
+- [ ] **MCP Server integration**
+  - [ ] Register tools with MCP server
+  - [ ] Create `src/index.ts` MCP server entry point
+  - [ ] Wire up tool handlers
+
+#### Deliverables
+- [ ] `src/tools/sales.ts` - Sales MCP tools
+- [ ] Working `get_orders` tool
+- [ ] Working `get_order_details` tool
+- [ ] Unit tests for tool logic
+- [ ] Integration tests for Orders API
+- [ ] E2E tests for MCP tools
+- [ ] Test fixtures with sample order data
+
+#### Success Criteria
+- [ ] Can retrieve orders from last 30 days via MCP
+- [ ] Can get details for a specific order
+- [ ] Date filtering works correctly
+- [ ] Pagination works for large result sets
+- [ ] Tools work in Claude Code/Desktop
+- [ ] All tests pass with ≥80% coverage
+
+---
+
+### Phase 1.6: Inventory Tools
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~5-6 days
+**Dependencies**: Phase 1.4 (can run parallel with 1.5)
+
+#### Tasks
+- [ ] **FBA Inventory API client methods**
+  - [ ] Implement `SPAPIClient.getFBAInventory()`
+  - [ ] Implement `SPAPIClient.getInventoryHealth()`
+  - [ ] Add SKU/ASIN filtering
+  - [ ] Handle pagination
+
+- [ ] **MCP Tools**
+  - [ ] Create `get_inventory_summary` tool
+    - Input: None or SKU filter (optional)
+    - Output: Inventory levels for all/filtered SKUs
+  - [ ] Create `get_fba_inventory` tool
+    - Input: marketplace (optional)
+    - Output: FBA inventory details
+  - [ ] Create `check_stock_levels` tool
+    - Input: List of SKUs/ASINs
+    - Output: Stock levels for specified products
+
+#### Deliverables
+- [ ] `src/tools/inventory.ts` - Inventory MCP tools
+- [ ] Working inventory tools
+- [ ] Unit tests for tool logic
+- [ ] Integration tests for FBA Inventory API
+- [ ] E2E tests for MCP tools
+- [ ] Test fixtures with sample inventory data
+
+#### Success Criteria
+- [ ] Can check current FBA inventory levels
+- [ ] Can filter by specific SKUs/ASINs
+- [ ] Inventory health metrics are accurate
+- [ ] Tools work in Claude Code/Desktop
+- [ ] All tests pass with ≥80% coverage
+
+---
+
+### Phase 1.7: Reports Tools
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~5-6 days
+**Dependencies**: Phase 1.4 (can run parallel with 1.5, 1.6)
+
+#### Tasks
+- [ ] **Reports API client methods**
+  - [ ] Implement `SPAPIClient.createReport(reportType, params)`
+  - [ ] Implement `SPAPIClient.getReport(reportId)`
+  - [ ] Implement `SPAPIClient.getReportDocument(documentId)`
+  - [ ] Implement report status polling
+  - [ ] Implement report document download and parsing
+
+- [ ] **MCP Tools**
+  - [ ] Create `request_report` tool
+    - Input: reportType, startDate, endDate
+    - Output: Report request confirmation with ID
+  - [ ] Create `get_report` tool
+    - Input: reportId
+    - Output: Report status or data if complete
+  - [ ] Create `list_reports` tool (optional)
+    - Input: reportTypes (optional)
+    - Output: List of recent reports
+
+- [ ] **Report parsing**
+  - [ ] Parse tab-delimited report format
+  - [ ] Support common report types (sales, inventory)
+  - [ ] Handle compressed reports (gzip)
+
+#### Deliverables
+- [ ] `src/tools/reports.ts` - Reports MCP tools
+- [ ] Working reports tools
+- [ ] Report parsing utilities
+- [ ] Unit tests for tool logic
+- [ ] Integration tests for Reports API
+- [ ] E2E tests for MCP tools
+- [ ] Test fixtures with sample report data
+
+#### Success Criteria
+- [ ] Can request a new report
+- [ ] Can check report status
+- [ ] Can download and parse completed reports
+- [ ] Handles report processing delays gracefully
+- [ ] Tools work in Claude Code/Desktop
+- [ ] All tests pass with ≥80% coverage
+
+---
+
+### Phase 1.8: Integration, Polish & Documentation
+
+**Status**: 🔄 NOT STARTED
+**Duration**: ~3-4 days
+**Dependencies**: Phases 1.5, 1.6, 1.7
+
+#### Tasks
+- [ ] **Integration testing**
+  - [ ] Test complete workflows end-to-end
+  - [ ] Test error scenarios across all tools
+  - [ ] Test rate limiting under load
+  - [ ] Verify all tools work together
+
+- [ ] **Code cleanup**
+  - [ ] Remove debug code and console.logs
+  - [ ] Refactor duplicated code
+  - [ ] Optimize imports
+  - [ ] Run linter and fix all issues
+  - [ ] Format all code consistently
+
+- [ ] **Documentation updates**
+  - [ ] Update README with actual usage examples
+  - [ ] Add JSDoc comments to all public APIs
+  - [ ] Update ROADMAP to mark Phase 1 complete
+  - [ ] Create CHANGELOG.md with Phase 1 changes
+  - [ ] Add troubleshooting section to README
+
+- [ ] **Manual testing**
+  - [ ] Build production bundle
+  - [ ] Test with Claude Code
+  - [ ] Test with Claude Desktop
+  - [ ] Verify all example queries from README work
+
+- [ ] **Performance optimization**
+  - [ ] Profile critical paths
+  - [ ] Optimize slow operations
+  - [ ] Add request caching where appropriate
+
+#### Deliverables
+- [ ] All tests passing with ≥80% coverage
+- [ ] Clean, well-documented code
+- [ ] Updated documentation
+- [ ] Working production build
+- [ ] CHANGELOG.md for Phase 1
+
+#### Success Criteria
+- [ ] All Phase 1 tools work flawlessly
+- [ ] MCP server boots in <2 seconds
+- [ ] Code coverage ≥80% for all modules
+- [ ] No TypeScript errors or warnings
+- [ ] No linter errors or warnings
+- [ ] Manual testing passes all scenarios
+- [ ] Ready for production use
+
+---
+
+## Phase 1 Summary
+
+### Overall Deliverables
+- ✅ Complete project foundation and documentation
+- ⏳ Working MCP server executable
+- ⏳ Authentication system (LWA OAuth + AWS Sig V4)
+- ⏳ Core tools: `get_orders`, `get_order_details`, `get_inventory_summary`, `request_report`, `get_report`
+- ⏳ Comprehensive test suite with ≥80% coverage
+- ⏳ Production-ready code
+
+### Overall Success Criteria
+- ✅ Project is well-documented and organized
+- ⏳ MCP server connects to Amazon SP-API successfully
+- ⏳ Can retrieve orders from last 30 days
+- ⏳ Can check FBA inventory levels
+- ⏳ Can request and download sales reports
+- ⏳ Works seamlessly with Claude Code and Claude Desktop
+- ⏳ 80%+ test coverage for all implemented features
+- ⏳ Code is clean, maintainable, and follows best practices
+
+### Timeline Summary
+- **Phase 1.1**: ✅ COMPLETED (~1 week)
+- **Phase 1.2**: ~3-4 days (Node.js/TypeScript setup)
+- **Phase 1.3**: ~1 week (Authentication)
+- **Phase 1.4**: ~4-5 days (HTTP Client & Rate Limiting)
+- **Phase 1.5**: ~1 week (Orders/Sales)
+- **Phase 1.6**: ~5-6 days (Inventory) - *can parallel with 1.5*
+- **Phase 1.7**: ~5-6 days (Reports) - *can parallel with 1.5, 1.6*
+- **Phase 1.8**: ~3-4 days (Integration & Polish)
+
+**Total**: 4-6 weeks (with some parallel work)
 
 ---
 
