@@ -19,6 +19,7 @@
     "test:e2e": "jest tests/e2e",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:manual-auth": "tsx scripts/test-auth.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -49,12 +50,13 @@
   "homepage": "https://github.com/jay-trivedi/amazon_sp_mcp#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
+    "aws4": "^1.13.2",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
-    "aws4": "^1.13.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/aws4": "^1.11.6",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.5",
     "@typescript-eslint/eslint-plugin": "^8.20.0",

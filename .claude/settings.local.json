@@ -7,7 +7,8 @@
       "Bash(npm run build:*)",
       "Bash(npm run type-check:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run lint:fix:*)"
+      "Bash(npm run lint:fix:*)",
+      "Bash(npm run test:coverage:*)"
     ],
     "deny": [],
     "ask": []

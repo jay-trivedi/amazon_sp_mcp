@@ -12,6 +12,79 @@ Research → Plan → Implement → Test → Cleanup → Document → Review
 
 ---
 
+## ⚠️ CRITICAL: NO SHORTCUTS POLICY
+
+**This is a non-negotiable rule that must NEVER be bypassed.**
+
+### Testing Integrity
+
+**NEVER take shortcuts when writing or fixing tests:**
+
+- ❌ **NEVER** make tests pass by removing or weakening assertions
+- ❌ **NEVER** skip failing tests or mark them as `.skip()` or `.todo()`
+- ❌ **NEVER** reduce coverage thresholds to make tests pass
+- ❌ **NEVER** mock functionality just to avoid testing the real logic
+- ❌ **NEVER** change test expectations to match broken behavior
+- ❌ **NEVER** disable strict type checking to avoid fixing type errors
+
+**ALWAYS fix the root cause:**
+
+- ✅ **ALWAYS** investigate why a test is failing
+- ✅ **ALWAYS** fix the actual bug or implementation issue
+- ✅ **ALWAYS** ensure tests validate real functionality, not mocked shortcuts
+- ✅ **ALWAYS** maintain or increase coverage - never decrease it
+- ✅ **ALWAYS** ensure tests validate actual behavior, not just pass green
+- ✅ **ALWAYS** write tests that would catch real bugs
+
+**If a test is failing:**
+1. Understand WHY it's failing (read the error, debug the code)
+2. Fix the implementation OR fix the test if the expectation was wrong
+3. NEVER weaken the test just to make it pass
+
+### Linting & Type Safety Integrity
+
+**NEVER take shortcuts with code quality:**
+
+- ❌ **NEVER** add files/directories to `.eslintignore` to bypass linting
+- ❌ **NEVER** use `eslint-disable` comments to suppress real issues
+- ❌ **NEVER** use `@ts-ignore` or `@ts-expect-error` to bypass type errors
+- ❌ **NEVER** use `any` type to avoid proper typing
+- ❌ **NEVER** disable strict TypeScript checks
+- ❌ **NEVER** lower linting rule strictness to avoid fixing code
+
+**ALWAYS maintain code quality:**
+
+- ✅ **ALWAYS** fix linting errors by improving the code
+- ✅ **ALWAYS** fix type errors with proper type definitions
+- ✅ **ALWAYS** include all source code in linting (including scripts, tools, etc.)
+- ✅ **ALWAYS** maintain strict TypeScript settings
+- ✅ **ALWAYS** use proper types instead of `any`
+
+**The only acceptable exceptions:**
+- `eslint-disable no-console` in CLI scripts where console output is intentional
+- Ignoring third-party files (node_modules, build output, generated code)
+- Type assertions when you have more information than TypeScript (with comments explaining why)
+
+### Why This Matters
+
+**Tests are your safety net** - weakening them is like cutting your own parachute. Fake passing tests are WORSE than no tests because they give false confidence.
+
+**Linting and type safety catch bugs before they ship** - bypassing them means shipping preventable bugs to users.
+
+**Technical debt compounds** - shortcuts taken today become major problems tomorrow.
+
+### Enforcement
+
+When working on this codebase:
+1. If tests fail, fix the implementation (or the test expectation if it was wrong)
+2. If linting fails, fix the code (don't silence the warning)
+3. If types are wrong, add proper types (don't use `any` or `@ts-ignore`)
+4. If coverage drops, add more tests (don't lower the threshold)
+
+**There are NO exceptions to this rule unless explicitly documented and justified.**
+
+---
+
 ## Workflow Steps
 
 ### Step 1: Research & Planning
@@ -564,6 +637,18 @@ Use this template when completing a roadmap task:
 
 ## Common Pitfalls to Avoid
 
+### ❌ CRITICAL: Don't Take Shortcuts on Tests or Linting
+
+**See the "NO SHORTCUTS POLICY" section above. This is the #1 rule.**
+
+Violating this rule is not acceptable:
+- ❌ Making tests pass artificially
+- ❌ Bypassing linting to avoid fixing code
+- ❌ Using `any` or `@ts-ignore` to avoid proper typing
+- ❌ Lowering coverage thresholds
+
+**Remember:** A passing CI with fake tests is worse than a failing CI with real tests.
+
 ### ❌ Don't Skip Steps
 - Every step is important
 - Skipping tests leads to bugs
@@ -573,6 +658,7 @@ Use this template when completing a roadmap task:
 - Always run tests before committing
 - Always check coverage
 - Always lint your code
+- Never commit code that fails quality checks
 
 ### ❌ Don't Leave TODOs in Code
 - Finish what you start
@@ -583,6 +669,7 @@ Use this template when completing a roadmap task:
 - Fix TypeScript warnings
 - Fix linter warnings
 - Address test warnings
+- Warnings today become errors tomorrow
 
 ### ❌ Don't Forget Documentation
 - Future you will thank present you
