@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/jay-trivedi-amazon-sp-mcp-badge.png)](https://mseep.ai/app/jay-trivedi-amazon-sp-mcp)
+
 # Amazon Seller Central MCP Server
 
 A Model Context Protocol (MCP) server that provides AI agents with access to Amazon Seller Central data through the Amazon Selling Partner API (SP-API).
