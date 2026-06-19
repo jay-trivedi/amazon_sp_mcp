@@ -107,8 +107,8 @@ amazon_sp_mcp/
 
 ### Technology Stack
 
-- **Runtime**: Node.js with TypeScript
-- **MCP SDK**: @modelcontextprotocol/sdk
+- **Runtime**: Node.js 20.12+ with TypeScript 6 (ESM)
+- **MCP SDK**: @modelcontextprotocol/sdk 1.29 (McpServer high-level API)
 - **API**: Amazon SP-API (Selling Partner API)
 - **Authentication**: LWA (Login with Amazon) OAuth 2.0
 - **HTTP Client**: axios or node-fetch

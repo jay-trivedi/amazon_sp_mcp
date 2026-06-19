@@ -59,8 +59,8 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 - [x] Initialize npm project (`package.json`)
 - [x] Configure TypeScript (`tsconfig.json`, `tsconfig.test.json`)
 - [x] Install core dependencies:
-  - [x] `@modelcontextprotocol/sdk`
-  - [x] `typescript`, `ts-node`
+  - [x] `@modelcontextprotocol/sdk` ^1.29.0 (Phase 1.3 landed on `^1.0.4`; modernized to `^1.29.0` in the `refactor/modernize-toolchain-and-mcp-sdk` change on 2026-06-19)
+  - [x] `typescript` ^6.0.3, `ts-node` (Phase 1.3 landed on `^5.7.2`; modernized in the same change)
   - [x] Development tools (ESLint, Prettier)
 - [x] Install testing dependencies:
   - [x] `jest`, `ts-jest`, `@types/jest`
@@ -331,7 +331,7 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 
 ### Phase 1.8: Integration, Polish & Documentation
 
-**Status**: 🔄 NOT STARTED
+**Status**: 🔄 NOT STARTED (pre-work: `refactor/modernize-toolchain-and-mcp-sdk` landed 2026-06-19 — modernized TS 5.7→6.0, MCP SDK 1.0.4→1.29, ESLint 8→10, Jest 29→30, nock 13→14, CommonJS→ESM, added @typescript/native-preview as opt-in `type-check:fast`)
 **Duration**: ~3-4 days
 **Dependencies**: Phases 1.5, 1.6, 1.7
 

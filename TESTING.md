@@ -142,11 +142,11 @@ E2E tests validate complete MCP tool workflows from input to output.
 **Example Structure** (`tests/e2e/mcp-tools.test.ts`):
 
 ```typescript
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { setupTestServer } from '../setup';
 
 describe('MCP Tools E2E', () => {
-  let server: Server;
+  let server: McpServer;
 
   beforeAll(async () => {
     server = await setupTestServer();
