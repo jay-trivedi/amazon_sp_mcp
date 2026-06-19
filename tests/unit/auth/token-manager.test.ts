@@ -2,12 +2,21 @@
  * Unit tests for TokenManager
  */
 
-import axios from 'axios';
-import { TokenManager } from '../../../src/auth/token-manager';
-import { LWACredentials } from '../../../src/types/sp-api';
+import { jest } from '@jest/globals';
+import type { LWACredentials } from '../../../src/types/sp-api.js';
 
-// Mock axios
-jest.mock('axios');
+jest.unstable_mockModule('axios', () => ({
+  __esModule: true,
+  default: {
+    post: jest.fn(),
+    isAxiosError: jest.fn(),
+  },
+  isAxiosError: jest.fn(),
+}));
+
+const { default: axios } = await import('axios');
+const { TokenManager } = await import('../../../src/auth/token-manager.js');
+
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('TokenManager', () => {
@@ -58,15 +67,12 @@ describe('TokenManager', () => {
 
       mockedAxios.post.mockResolvedValueOnce(mockResponse);
 
-      // First call - fetches token
       const token1 = await tokenManager.getAccessToken();
-
-      // Second call - should return cached token
       const token2 = await tokenManager.getAccessToken();
 
       expect(token1).toBe('cached_token');
       expect(token2).toBe('cached_token');
-      expect(mockedAxios.post).toHaveBeenCalledTimes(1); // Only called once
+      expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     });
 
     it('should refresh token when cached token expires', async () => {
@@ -74,7 +80,7 @@ describe('TokenManager', () => {
         data: {
           access_token: 'first_token',
           token_type: 'bearer',
-          expires_in: 0, // Expires immediately
+          expires_in: 0,
         },
       };
 
@@ -88,14 +94,11 @@ describe('TokenManager', () => {
 
       mockedAxios.post.mockResolvedValueOnce(mockResponse1).mockResolvedValueOnce(mockResponse2);
 
-      // First call
       const token1 = await tokenManager.getAccessToken();
       expect(token1).toBe('first_token');
 
-      // Wait a bit for token to expire
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      // Second call - should refresh
       const token2 = await tokenManager.getAccessToken();
       expect(token2).toBe('second_token');
       expect(mockedAxios.post).toHaveBeenCalledTimes(2);
@@ -155,15 +158,12 @@ describe('TokenManager', () => {
 
       mockedAxios.post.mockResolvedValue(mockResponse);
 
-      // Get token (caches it)
       await tokenManager.getAccessToken();
       expect(tokenManager.hasCachedToken()).toBe(true);
 
-      // Clear cache
       tokenManager.clearCache();
       expect(tokenManager.hasCachedToken()).toBe(false);
 
-      // Next call should fetch new token
       await tokenManager.getAccessToken();
       expect(mockedAxios.post).toHaveBeenCalledTimes(2);
     });
@@ -194,7 +194,7 @@ describe('TokenManager', () => {
         data: {
           access_token: 'test_token',
           token_type: 'bearer',
-          expires_in: 0, // Expires immediately
+          expires_in: 0,
         },
       };
 
@@ -202,7 +202,6 @@ describe('TokenManager', () => {
 
       await tokenManager.getAccessToken();
 
-      // Wait for expiration
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(tokenManager.hasCachedToken()).toBe(false);

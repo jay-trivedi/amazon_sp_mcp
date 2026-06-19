@@ -3,6 +3,8 @@
  * Runs before all test suites
  */
 
+import { jest } from '@jest/globals';
+
 // Set test environment variables
 process.env.NODE_ENV = 'test';
 process.env.AWS_ACCESS_KEY_ID = 'test_access_key';
@@ -18,7 +20,7 @@ process.env.SP_API_ENDPOINT = 'https://sellingpartnerapi-na.amazon.com';
 jest.setTimeout(10000);
 
 // Mock console methods to reduce noise in test output
-global.console = {
+globalThis.console = {
   ...console,
   log: jest.fn(),
   debug: jest.fn(),

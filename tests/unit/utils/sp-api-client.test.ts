@@ -1,59 +1,84 @@
-import axios from 'axios';
-import { SPAPIClient, SPAPIClientOptions } from '../../../src/utils/sp-api-client';
-import { TokenManager } from '../../../src/auth/token-manager';
-import { RateLimiter, RateLimitConfig } from '../../../src/utils/rate-limiter';
-import {
+import { jest } from '@jest/globals';
+import type { SPAPIClientOptions } from '../../../src/utils/sp-api-client.js';
+import type { RateLimitConfig } from '../../../src/utils/rate-limiter.js';
+import type { TokenManager as TokenManagerType } from '../../../src/auth/token-manager.js';
+
+const mockPost = jest.fn();
+const mockIsAxiosError = jest.fn();
+const mockAxios = jest.fn();
+(mockAxios as any).post = mockPost;
+(mockAxios as any).isAxiosError = mockIsAxiosError;
+
+jest.unstable_mockModule('axios', () => ({
+  __esModule: true,
+  default: mockAxios,
+  isAxiosError: mockIsAxiosError,
+  post: mockPost,
+}));
+
+const mockGetAccessToken = jest.fn();
+const mockClearCache = jest.fn();
+const mockHasCachedToken = jest.fn();
+
+jest.unstable_mockModule('../../../src/auth/token-manager.js', () => ({
+  TokenManager: class MockTokenManager {
+    getAccessToken = mockGetAccessToken;
+    clearCache = mockClearCache;
+    hasCachedToken = mockHasCachedToken;
+  },
+}));
+
+const mockSignRequest = jest.fn();
+
+jest.unstable_mockModule('../../../src/utils/aws-signature.js', () => ({
+  signRequest: mockSignRequest,
+}));
+
+const { default: axios } = await import('axios');
+const { SPAPIClient } = await import('../../../src/utils/sp-api-client.js');
+const { TokenManager: MockedTokenManager } = await import('../../../src/auth/token-manager.js');
+const { RateLimiter } = await import('../../../src/utils/rate-limiter.js');
+const {
   SPAPIError,
   SPAPIRequestError,
   SPAPIServerError,
   RateLimitError,
   SPAPIAuthError,
   SPAPIValidationError,
-} from '../../../src/utils/errors';
-import * as awsSignature from '../../../src/utils/aws-signature';
-
-// Mock dependencies
-jest.mock('axios');
-jest.mock('../../../src/auth/token-manager');
-jest.mock('../../../src/utils/aws-signature');
+} = await import('../../../src/utils/errors.js');
+const awsSignature = await import('../../../src/utils/aws-signature.js');
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-const MockedTokenManager = TokenManager as jest.MockedClass<typeof TokenManager>;
 const mockedSignRequest = awsSignature.signRequest as jest.MockedFunction<
   typeof awsSignature.signRequest
 >;
 
 describe('SPAPIClient', () => {
-  let client: SPAPIClient;
-  let mockTokenManager: jest.Mocked<TokenManager>;
-  let mockRateLimiter: jest.Mocked<RateLimiter>;
+  let client: InstanceType<typeof SPAPIClient>;
+  let mockTokenManager: jest.Mocked<TokenManagerType>;
+  let mockRateLimiter: jest.Mocked<InstanceType<typeof RateLimiter>>;
   let clientOptions: SPAPIClientOptions;
 
   beforeEach(() => {
-    // Reset mocks
     jest.clearAllMocks();
 
-    // Mock TokenManager
     mockTokenManager = new MockedTokenManager({
       clientId: 'test-client-id',
       clientSecret: 'test-secret',
       refreshToken: 'test-refresh',
-    }) as jest.Mocked<TokenManager>;
+    }) as jest.Mocked<TokenManagerType>;
     mockTokenManager.getAccessToken.mockResolvedValue('test-access-token');
 
-    // Mock RateLimiter
     const mockConfigs = new Map<string, RateLimitConfig>();
-    mockRateLimiter = new RateLimiter(mockConfigs) as jest.Mocked<RateLimiter>;
+    mockRateLimiter = new RateLimiter(mockConfigs) as jest.Mocked<InstanceType<typeof RateLimiter>>;
     mockRateLimiter.acquire = jest.fn().mockResolvedValue(undefined);
 
-    // Mock AWS signature
     mockedSignRequest.mockReturnValue({
       Authorization: 'AWS4-HMAC-SHA256 ...',
       'X-Amz-Date': '20240101T000000Z',
       host: 'sellingpartnerapi-na.amazon.com',
     });
 
-    // Create client options
     clientOptions = {
       endpoint: 'https://sellingpartnerapi-na.amazon.com',
       marketplaceId: 'ATVPDKIKX0DER',
@@ -133,7 +158,7 @@ describe('SPAPIClient', () => {
         expect.objectContaining({
           method: 'POST',
           data: body,
-        }),
+        })
       );
     });
 
@@ -143,7 +168,7 @@ describe('SPAPIClient', () => {
           method: 'GET',
           path: '/orders/v0/orders',
         },
-        'orders',
+        'orders'
       );
 
       expect(mockRateLimiter.acquire).toHaveBeenCalledWith('orders');
@@ -160,7 +185,7 @@ describe('SPAPIClient', () => {
           headers: expect.objectContaining({
             'x-amz-access-token': 'test-access-token',
           }),
-        }),
+        })
       );
     });
 
@@ -176,7 +201,7 @@ describe('SPAPIClient', () => {
             Authorization: 'AWS4-HMAC-SHA256 ...',
             'X-Amz-Date': '20240101T000000Z',
           }),
-        }),
+        })
       );
     });
 
@@ -194,17 +219,17 @@ describe('SPAPIClient', () => {
       expect(mockedAxios).toHaveBeenCalledWith(
         expect.objectContaining({
           url: expect.stringContaining('MarketplaceIds=ATVPDKIKX0DER'),
-        }),
+        })
       );
       expect(mockedAxios).toHaveBeenCalledWith(
         expect.objectContaining({
           url: expect.stringContaining('OrderStatus=Shipped'),
-        }),
+        })
       );
       expect(mockedAxios).toHaveBeenCalledWith(
         expect.objectContaining({
           url: expect.stringContaining('limit=50'),
-        }),
+        })
       );
     });
 
@@ -222,7 +247,7 @@ describe('SPAPIClient', () => {
           headers: expect.objectContaining({
             'x-custom-header': 'custom-value',
           }),
-        }),
+        })
       );
     });
   });
@@ -248,7 +273,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIRequestError);
     });
 
@@ -272,7 +297,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIValidationError);
     });
 
@@ -296,12 +321,11 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIAuthError);
     });
 
     it('should throw RateLimitError for 429 errors', async () => {
-      // Create client with no retries to avoid long waits
       const noRetryClient = new SPAPIClient({
         ...clientOptions,
         retryConfig: { maxRetries: 0 },
@@ -326,12 +350,11 @@ describe('SPAPIClient', () => {
         noRetryClient.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(RateLimitError);
     });
 
     it('should include retry-after in RateLimitError', async () => {
-      // Create client with no retries to avoid long waits
       const noRetryClient = new SPAPIClient({
         ...clientOptions,
         retryConfig: { maxRetries: 0 },
@@ -376,7 +399,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIServerError);
     });
 
@@ -414,7 +437,6 @@ describe('SPAPIClient', () => {
       error.code = 'ENOTFOUND';
       error.isAxiosError = true;
 
-      // Mock axios.isAxiosError to recognize our test error
       jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
 
       mockedAxios.mockRejectedValue(error);
@@ -423,7 +445,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow('Network error: Unable to reach SP-API');
     });
 
@@ -432,7 +454,6 @@ describe('SPAPIClient', () => {
       error.code = 'ETIMEDOUT';
       error.isAxiosError = true;
 
-      // Mock axios.isAxiosError to recognize our test error
       jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
 
       mockedAxios.mockRejectedValue(error);
@@ -441,7 +462,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow('Request timeout');
     });
   });
@@ -512,7 +533,7 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIRequestError);
 
       expect(mockedAxios).toHaveBeenCalledTimes(1);
@@ -531,10 +552,9 @@ describe('SPAPIClient', () => {
         client.request({
           method: 'GET',
           path: '/test',
-        }),
+        })
       ).rejects.toThrow(SPAPIServerError);
 
-      // 1 initial + 3 retries = 4 total
       expect(mockedAxios).toHaveBeenCalledTimes(4);
     });
 
@@ -542,7 +562,6 @@ describe('SPAPIClient', () => {
       const delays: number[] = [];
       const originalSetTimeout = global.setTimeout;
 
-      // Mock setTimeout to track delays
       global.setTimeout = jest.fn((callback: any, delay: number) => {
         delays.push(delay);
         return originalSetTimeout(callback, 0) as any;
@@ -565,7 +584,6 @@ describe('SPAPIClient', () => {
         // Expected to fail
       }
 
-      // Should have delays: 1000ms, 2000ms, 4000ms (exponential backoff)
       expect(delays.length).toBeGreaterThan(0);
       expect(delays[0]).toBe(1000);
       if (delays.length > 1) expect(delays[1]).toBe(2000);
