@@ -73,7 +73,7 @@ export class TokenManager {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.error_description || error.message;
-        throw new Error(`Failed to refresh LWA access token: ${message}`);
+        throw new Error(`Failed to refresh LWA access token: ${message}`, { cause: error });
       }
       throw error;
     }
