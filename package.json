@@ -4,7 +4,7 @@
   "description": "Model Context Protocol (MCP) server for Amazon Seller Central - Access sales data, inventory, returns, and reports through the Amazon SP-API",
   "main": "build/index.js",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.12.0"
   },
   "scripts": {
     "build": "tsc",
@@ -49,16 +49,16 @@
   },
   "homepage": "https://github.com/jay-trivedi/amazon_sp_mcp#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "aws4": "^1.13.2",
     "axios": "^1.7.9",
-    "dotenv": "^16.4.7",
+    "dotenv": "^17.4.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/aws4": "^1.11.6",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.19.0",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "eslint": "^8.57.1",
@@ -70,6 +70,6 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.3"
   }
 }
