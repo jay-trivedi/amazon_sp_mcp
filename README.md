@@ -107,8 +107,8 @@ amazon_sp_mcp/
 
 ### Technology Stack
 
-- **Runtime**: Node.js with TypeScript
-- **MCP SDK**: @modelcontextprotocol/sdk
+- **Runtime**: Node.js 20.12+ with TypeScript 6 (ESM)
+- **MCP SDK**: @modelcontextprotocol/sdk 1.29 (McpServer high-level API)
 - **API**: Amazon SP-API (Selling Partner API)
 - **Authentication**: LWA (Login with Amazon) OAuth 2.0
 - **HTTP Client**: axios or node-fetch
@@ -146,7 +146,7 @@ The server uses LWA (Login with Amazon) OAuth 2.0 for authentication:
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20.12+ and pnpm 10+
 - Amazon Seller Central account
 - Amazon SP-API developer application (registered)
 - AWS IAM credentials with SP-API permissions
@@ -159,17 +159,17 @@ git clone <repository-url>
 cd amazon_sp_mcp
 
 # Install dependencies
-npm install
+pnpm install
 
 # Configure environment variables
 cp .env.example .env
 # Edit .env with your credentials
 
 # Build the project
-npm run build
+pnpm build
 
 # Test the server
-npm run test
+pnpm test
 ```
 
 ### Environment Configuration
@@ -382,13 +382,13 @@ The server implements automatic rate limiting and request queuing to comply with
 ### Building
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ### Running Locally
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ### Testing
@@ -397,10 +397,10 @@ The project uses Jest with comprehensive unit, integration, and end-to-end tests
 
 ```bash
 # Run all tests
-npm run test
+pnpm test
 
 # Run tests with coverage
-npm run test:coverage
+pnpm test:coverage
 ```
 
 📄 **For detailed testing documentation, see [TESTING.md](TESTING.md)**

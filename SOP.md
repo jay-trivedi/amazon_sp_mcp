@@ -126,10 +126,10 @@ git checkout -b feature/your-feature-name
 # 3. Work on your feature (following all 7 SOP steps)
 
 # 4. Before pushing, ensure quality gates pass
-npm run build
-npm run test:coverage
-npm run lint
-npm run type-check
+pnpm build
+pnpm test:coverage
+pnpm lint
+pnpm type-check
 
 # 5. Commit your changes
 git add .
@@ -389,34 +389,34 @@ describe('Orders API Integration', () => {
 
 - [ ] **Run unit tests**
   ```bash
-  npm run test:unit
+  pnpm test:unit
   ```
   - All tests should pass
   - Review any failures and fix
 
 - [ ] **Run integration tests**
   ```bash
-  npm run test:integration
+  pnpm test:integration
   ```
   - All tests should pass
   - Verify mocks are working correctly
 
 - [ ] **Run E2E tests**
   ```bash
-  npm run test:e2e
+  pnpm test:e2e
   ```
   - All tests should pass
   - Verify complete workflows work
 
 - [ ] **Run full test suite**
   ```bash
-  npm run test
+  pnpm test
   ```
   - All tests should pass
 
 - [ ] **Check code coverage**
   ```bash
-  npm run test:coverage
+  pnpm test:coverage
   ```
   - Lines: ≥80%
   - Branches: ≥80%
@@ -430,13 +430,13 @@ describe('Orders API Integration', () => {
 
 - [ ] **Run type check**
   ```bash
-  npm run type-check
+  pnpm type-check
   ```
   - No TypeScript errors
 
 - [ ] **Run linter**
   ```bash
-  npm run lint
+  pnpm lint
   ```
   - No linting errors
   - Fix any warnings
@@ -491,7 +491,7 @@ describe('Orders API Integration', () => {
 
 - [ ] **Format code**
   ```bash
-  npm run format
+  pnpm format
   ```
   - Consistent formatting throughout
 
@@ -619,7 +619,7 @@ export async function getOrders(params: GetOrdersParams): Promise<Order[]> {
   - Verify it solves the original problem
 
 - [ ] **Test manually** (if applicable)
-  - Build the project: `npm run build`
+  - Build the project: `pnpm build`
   - Run the MCP server locally
   - Test with Claude Code or Claude Desktop
   - Verify the tool works as expected
@@ -770,28 +770,28 @@ Violating this rule is not acceptable:
 
 ### Development
 ```bash
-npm run dev          # Run in development mode
-npm run build        # Build for production
-npm run type-check   # Check TypeScript types
-npm run lint         # Run linter
-npm run format       # Format code
+pnpm dev              # Run in development mode
+pnpm build            # Build for production
+pnpm type-check       # Check TypeScript types
+pnpm lint             # Run linter
+pnpm format           # Format code
 ```
 
 ### Testing
 ```bash
-npm run test                # Run all tests
-npm run test:unit          # Run unit tests only
-npm run test:integration   # Run integration tests only
-npm run test:e2e           # Run E2E tests only
-npm run test:watch         # Watch mode
-npm run test:coverage      # Generate coverage report
-npm run test:ci            # CI mode
+pnpm test             # Run all tests
+pnpm test:unit        # Run unit tests only
+pnpm test:integration # Run integration tests only
+pnpm test:e2e         # Run E2E tests only
+pnpm test:watch       # Watch mode
+pnpm test:coverage    # Generate coverage report
+pnpm test:ci          # CI mode
 ```
 
 ### Quality Gates
 ```bash
 # Run before committing
-npm run build && npm run test:coverage && npm run lint && npm run type-check
+pnpm build && pnpm test:coverage && pnpm lint && pnpm type-check
 ```
 
 ---
@@ -841,10 +841,10 @@ refactor/simplify-error-handling
 ### Before Pushing (to ANY branch)
 ```bash
 # Ensure everything is clean
-npm run build
-npm run test:coverage
-npm run lint
-npm run type-check
+pnpm build
+pnpm test:coverage
+pnpm lint
+pnpm type-check
 
 # If all pass, commit and push to feature branch
 git add .

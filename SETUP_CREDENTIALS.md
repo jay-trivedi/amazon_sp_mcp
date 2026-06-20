@@ -224,7 +224,7 @@ Marketplace IDs are standardized by region:
 Run the authentication test script:
 
 ```bash
-npm run test:manual-auth
+pnpm test:manual-auth
 ```
 
 **Expected output:**

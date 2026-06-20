@@ -2,6 +2,7 @@
  * Unit tests for CredentialsManager
  */
 
+import { jest } from '@jest/globals';
 import { CredentialsManager } from '../../../src/auth/credentials';
 
 describe('CredentialsManager', () => {

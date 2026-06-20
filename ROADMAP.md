@@ -56,16 +56,16 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 **Dependencies**: Phase 1.1
 
 #### Tasks
-- [x] Initialize npm project (`package.json`)
+- [x] Initialize pnpm project (`package.json`)
 - [x] Configure TypeScript (`tsconfig.json`, `tsconfig.test.json`)
 - [x] Install core dependencies:
-  - [x] `@modelcontextprotocol/sdk`
-  - [x] `typescript`, `ts-node`
+  - [x] `@modelcontextprotocol/sdk` ^1.29.0 (Phase 1.3 landed on `^1.0.4`; modernized to `^1.29.0` in the `refactor/modernize-toolchain-and-mcp-sdk` change on 2026-06-19)
+  - [x] `typescript` ^6.0.3, `ts-node` (Phase 1.3 landed on `^5.7.2`; modernized in the same change)
   - [x] Development tools (ESLint, Prettier)
 - [x] Install testing dependencies:
   - [x] `jest`, `ts-jest`, `@types/jest`
   - [x] `nock` for HTTP mocking
-- [x] Configure build scripts (`npm run build`, `npm run dev`)
+- [x] Configure build scripts (`pnpm build`, `pnpm dev`)
 - [x] Configure test scripts (all test commands from TESTING.md)
 - [x] Create basic project structure (empty directories)
 - [x] Write a "Hello World" MCP server to verify setup
@@ -73,14 +73,14 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 #### Deliverables
 - [x] `package.json` with all dependencies
 - [x] `tsconfig.json` configured
-- [x] Build system working (`npm run build` succeeds)
-- [x] Test system working (`npm test` runs)
+- [x] Build system working (`pnpm build` succeeds)
+- [x] Test system working (`pnpm test` runs)
 - [x] Basic MCP server boots successfully
 
 #### Success Criteria
-- [x] `npm run build` compiles without errors
-- [x] `npm test` runs (all tests passing: 3/3)
-- [x] Can run MCP server with `node build/index.js`
+- [x] `pnpm build` compiles without errors
+- [x] `pnpm test` runs (all tests passing: 3/3)
+- [x] Can run MCP server with `node build/src/index.js`
 - [x] TypeScript types are properly configured
 - [x] Linter runs without errors
 
@@ -331,7 +331,7 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 
 ### Phase 1.8: Integration, Polish & Documentation
 
-**Status**: 🔄 NOT STARTED
+**Status**: 🔄 NOT STARTED (pre-work: `refactor/modernize-toolchain-and-mcp-sdk` landed 2026-06-19 — modernized TS 5.7→6.0, MCP SDK 1.0.4→1.29, ESLint 8→10, Jest 29→30, nock 13→14, CommonJS→ESM, added @typescript/native-preview as opt-in `type-check:fast`)
 **Duration**: ~3-4 days
 **Dependencies**: Phases 1.5, 1.6, 1.7
 

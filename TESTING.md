@@ -28,25 +28,25 @@ tests/
 
 ```bash
 # Run all tests
-npm run test
+pnpm test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm test:watch
 
 # Run tests with coverage
-npm run test:coverage
+pnpm test:coverage
 
 # Run only unit tests
-npm run test:unit
+pnpm test:unit
 
 # Run only integration tests
-npm run test:integration
+pnpm test:integration
 
 # Run only e2e tests
-npm run test:e2e
+pnpm test:e2e
 
 # Run tests in CI mode
-npm run test:ci
+pnpm test:ci
 ```
 
 ## Unit Tests
@@ -142,11 +142,11 @@ E2E tests validate complete MCP tool workflows from input to output.
 **Example Structure** (`tests/e2e/mcp-tools.test.ts`):
 
 ```typescript
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { setupTestServer } from '../setup';
 
 describe('MCP Tools E2E', () => {
-  let server: Server;
+  let server: McpServer;
 
   beforeAll(async () => {
     server = await setupTestServer();
@@ -279,7 +279,7 @@ Target coverage thresholds:
 Generate coverage reports:
 
 ```bash
-npm run test:coverage
+pnpm test:coverage
 ```
 
 View HTML coverage report:
@@ -309,27 +309,33 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run linter
-        run: npm run lint
+        run: pnpm lint
 
       - name: Run type check
-        run: npm run type-check
+        run: pnpm type-check
 
       - name: Run tests
-        run: npm run test:ci
+        run: pnpm test:ci
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -362,7 +368,7 @@ SP_API_ENDPOINT=http://localhost:3000/mock-sp-api
 ### Watch Mode
 
 ```bash
-npm run test:watch
+pnpm test:watch
 ```
 
 ### Debugging Tests
@@ -374,7 +380,7 @@ Add to `launch.json` (VS Code):
   "type": "node",
   "request": "launch",
   "name": "Jest Debug",
-  "program": "${workspaceFolder}/node_modules/.bin/jest",
+  "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
   "args": ["--runInBand", "--no-cache"],
   "console": "integratedTerminal",
   "internalConsoleOptions": "neverOpen"
@@ -406,7 +412,7 @@ Add these scripts to `package.json`:
     "test:integration": "jest tests/integration",
     "test:e2e": "jest tests/e2e",
     "test:ci": "jest --ci --coverage --maxWorkers=2",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "test:debug": "node --experimental-vm-modules --inspect-brk node_modules/jest/bin/jest.js --runInBand"
   }
 }
 ```
@@ -416,7 +422,7 @@ Add these scripts to `package.json`:
 Install these dev dependencies:
 
 ```bash
-npm install --save-dev \
+pnpm add -D \
   jest \
   ts-jest \
   @types/jest \
@@ -430,7 +436,7 @@ npm install --save-dev \
 
 ### Local Coverage Report
 
-After running `npm run test:coverage`, you'll get:
+After running `pnpm test:coverage`, you'll get:
 
 ```
 PASS  tests/unit/auth/token-manager.test.ts
@@ -517,9 +523,9 @@ describe('NewFeature', () => {
 
 ### Tests Failing Locally
 
-1. **Clear Jest cache**: `npm run test -- --clearCache`
-2. **Check Node version**: Ensure Node 18+ is installed
-3. **Verify dependencies**: Run `npm install` again
+1. **Clear Jest cache**: `pnpm test -- --clearCache`
+2. **Check Node version**: Ensure Node 20.12+ is installed
+3. **Verify dependencies**: Run `pnpm install` again
 4. **Check environment**: Ensure `.env.test` exists
 
 ### Tests Pass Locally but Fail in CI
