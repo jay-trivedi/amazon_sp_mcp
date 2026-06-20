@@ -3,12 +3,19 @@
     "allow": [
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(npm test)",
-      "Bash(npm run build:*)",
-      "Bash(npm run type-check:*)",
-      "Bash(npm run lint:*)",
-      "Bash(npm run lint:fix:*)",
-      "Bash(npm run test:coverage:*)"
+      "Bash(pnpm test)",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm run type-check:*)",
+      "Bash(pnpm run lint:*)",
+      "Bash(pnpm run lint:fix:*)",
+      "Bash(pnpm run test:coverage:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm outdated)",
+      "Bash(pnpm view:*)",
+      "Bash(pnpm ls:*)",
+      "Bash(pnpm why:*)"
     ],
     "deny": [],
     "ask": []

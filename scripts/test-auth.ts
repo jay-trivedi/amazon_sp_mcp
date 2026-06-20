@@ -2,7 +2,7 @@
 
 /**
  * Manual test script for authentication with REAL Amazon credentials
- * Run with: npm run test:manual-auth
+ * Run with: pnpm test:manual-auth
  */
 
 /* eslint-disable no-console */

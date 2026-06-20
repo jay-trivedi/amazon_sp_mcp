@@ -20,18 +20,20 @@ When picking up a new tool to add, expect to create the `src/tools/<name>.ts`, t
 ## Commands
 
 ```bash
-npm run dev              # tsx src/index.ts (no build, reads .env)
-npm run build            # tsc -> build/src/   (ESM; main is build/src/index.js)
-npm run start            # node build/src/index.js
-npm run test             # jest under --experimental-vm-modules (ESM)
-npm run test:unit        # only tests/unit
-npm run test:coverage    # with coverage; enforces 80% thresholds
-npm run test:manual-auth # tsx scripts/test-auth.ts — LIVE call to Amazon LWA, needs real .env
-npm run type-check       # tsc --noEmit (stable TS 6)
-npm run type-check:fast  # tsgo --noEmit (Go-rewrite preview, opt-in, ~2.6x faster on this tree)
-npm run lint             # eslint .   (does NOT lint tests/, see below)
-npm run format           # prettier --write
+pnpm dev                 # tsx src/index.ts (no build, reads .env)
+pnpm build               # tsc -> build/src/   (ESM; main is build/src/index.js)
+pnpm start               # node build/src/index.js
+pnpm test                # jest under --experimental-vm-modules (ESM)
+pnpm test:unit           # only tests/unit
+pnpm test:coverage       # with coverage; enforces 80% thresholds
+pnpm test:manual-auth    # tsx scripts/test-auth.ts — LIVE call to Amazon LWA, needs real .env
+pnpm type-check          # tsc --noEmit (stable TS 6)
+pnpm type-check:fast     # tsgo --noEmit (Go-rewrite preview, opt-in, ~2.6x faster on this tree)
+pnpm lint                # eslint .   (does NOT lint tests/, see below)
+pnpm format              # prettier --write
 ```
+
+`pnpm install` is the install command (no `--save` / `--save-dev` flags — use `pnpm add` / `pnpm add -D`). The lockfile is `pnpm-lock.yaml` (gitignored locally; not part of the repo contract — `package.json` is).
 
 `test:debug` is also available: `node --experimental-vm-modules --inspect-brk node_modules/jest/bin/jest.js --runInBand`.
 
@@ -40,7 +42,7 @@ npm run format           # prettier --write
 Per `SOP.md`, the gate order is:
 
 ```bash
-npm run build && npm run test:coverage && npm run lint && npm run type-check
+pnpm build && pnpm test:coverage && pnpm lint && pnpm type-check
 ```
 
 Coverage thresholds in `jest.config.js` are 80% across branches/functions/lines/statements — Jest will fail the run if they drop. Do not lower them.
@@ -48,13 +50,13 @@ Coverage thresholds in `jest.config.js` are 80% across branches/functions/lines/
 ## Conventions worth knowing
 
 - **`engines.node >=20.12.0`.** Required by `nock@14`. Node 18 is no longer supported.
-- **The project is an ES module.** `package.json` has `"type": "module"`; `tsconfig.json` uses `module: "NodeNext"` and `moduleResolution: "NodeNext"`. Source emits to `build/src/...` (not `build/...` directly) because `tsconfig.test.json` sets `rootDir: "."`. Update `npm run start` and any deployment script that referenced `build/index.js` to use `build/src/index.js`.
+- **The project is an ES module.** `package.json` has `"type": "module"`; `tsconfig.json` uses `module: "NodeNext"` and `moduleResolution: "NodeNext"`. Source emits to `build/src/...` (not `build/...` directly) because `tsconfig.test.json` sets `rootDir: "."`. Update `pnpm start` and any deployment script that referenced `build/index.js` to use `build/src/index.js`.
 - **`.js` import suffixes in TS source are mandatory in ESM mode.** Files import like `from '../types/sp-api.js'` and Node will resolve them to the `.ts` source at build time. Don't drop the `.js` suffix — Node ESM requires the full extension.
 - **Two tsconfigs.** `tsconfig.json` excludes `tests/`. `tsconfig.test.json` extends it and includes `tests/**/*` + `src/**/*`, and sets `rootDir: "."` (required by TS 6 in this layout). Jest uses the test one. Edit carefully — IDE and `tsc --noEmit` use different ones.
 - **Strict TS** is on, including `noUncheckedIndexedAccess`, `noImplicitOverride`, `noUnusedLocals`, `noUnusedParameters`. Array/object index access returns `T | undefined` — handle it.
 - **ESLint 10 with flat config.** `eslint.config.mjs` is the source of truth. `tests/` is in the `ignores` block. Don't revert to `.eslintrc.json`; ESLint 8 is no longer installed and v9+ no longer supports the legacy format.
-- **`ts-jest` is pinned at `^29.4.11`.** There is no `ts-jest@30` on npm; the latest 29.x already declares `"jest": "^29 || ^30"` in its peerDependencies, so Jest 30 works with ts-jest 29. Do not bump ts-jest or migrate the transformer unless this assumption changes.
-- **Jest runs in ESM mode.** `jest.config.cjs` sets `extensionsToTreatAsEsm: ['.ts']` and `useESM: true` on ts-jest. Every `npm test*` script threads `--experimental-vm-modules` to the `node` invocation. Tests that need to mock modules use `jest.unstable_mockModule(...)` + dynamic `await import(...)` — the CJS-style hoisted `jest.mock(...)` does not work in ESM mode.
+- **`ts-jest` is pinned at `^29.4.11`.** There is no `ts-jest@30` on the npm registry; the latest 29.x already declares `"jest": "^29 || ^30"` in its peerDependencies, so Jest 30 works with ts-jest 29. Do not bump ts-jest or migrate the transformer unless this assumption changes.
+- **Jest runs in ESM mode.** `jest.config.cjs` sets `extensionsToTreatAsEsm: ['.ts']` and `useESM: true` on ts-jest. Every `pnpm test*` script threads `--experimental-vm-modules` to the `node` invocation. Tests that need to mock modules use `jest.unstable_mockModule(...)` + dynamic `await import(...)` — the CJS-style hoisted `jest.mock(...)` does not work in ESM mode.
 - **`tests/` is unlinted.** This is a non-negotiable project convention; do not add lint config to test files.
 - **Prettier `endOfLine: "lf"`** on a Windows checkout. Prettier will rewrite CRLF to LF on format. Don't fight it.
 - **No CI.** Don't expect GitHub Actions results; run the four quality-gate commands locally before pushing.
