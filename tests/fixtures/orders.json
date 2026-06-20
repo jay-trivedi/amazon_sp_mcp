@@ -1,0 +1,49 @@
+{
+  "payload": {
+    "Orders": [
+      {
+        "AmazonOrderId": "026-1234567-8901234",
+        "PurchaseDate": "2026-06-15T10:23:45Z",
+        "LastUpdateDate": "2026-06-16T08:00:00Z",
+        "OrderStatus": "Shipped",
+        "FulfillmentChannel": "AFN",
+        "NumberOfItemsShipped": 2,
+        "NumberOfItemsUnshipped": 0,
+        "OrderTotal": {
+          "Amount": "49.99",
+          "CurrencyCode": "USD"
+        },
+        "MarketplaceId": "ATVPDKIKX0DER"
+      },
+      {
+        "AmazonOrderId": "026-2345678-9012345",
+        "PurchaseDate": "2026-06-17T14:11:02Z",
+        "LastUpdateDate": "2026-06-17T14:11:02Z",
+        "OrderStatus": "Pending",
+        "FulfillmentChannel": "MFN",
+        "NumberOfItemsShipped": 0,
+        "NumberOfItemsUnshipped": 1,
+        "OrderTotal": {
+          "Amount": "12.50",
+          "CurrencyCode": "USD"
+        },
+        "MarketplaceId": "ATVPDKIKX0DER"
+      },
+      {
+        "AmazonOrderId": "026-3456789-0123456",
+        "PurchaseDate": "2026-06-18T09:30:00Z",
+        "LastUpdateDate": "2026-06-18T11:00:00Z",
+        "OrderStatus": "Canceled",
+        "FulfillmentChannel": "AFN",
+        "NumberOfItemsShipped": 0,
+        "NumberOfItemsUnshipped": 0,
+        "OrderTotal": {
+          "Amount": "79.00",
+          "CurrencyCode": "USD"
+        },
+        "MarketplaceId": "ATVPDKIKX0DER"
+      }
+    ],
+    "NextToken": "page2-token-abc"
+  }
+}

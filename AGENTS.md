@@ -10,12 +10,22 @@ TypeScript MCP server for Amazon Seller Central (SP-API). Runs on stdio via `@mo
 
 The README and ROADMAP describe an aspirational layout. The actual code is **Phase 1.3–1.4 only**:
 
-- `src/index.ts` registers exactly **one tool: `hello`**. No `get_orders`, `get_inventory`, etc. exist yet.
-- Directories `src/tools/`, `tests/fixtures/`, `tests/mocks/`, `tests/e2e/` **do not exist**, even though README shows them.
+- `src/index.ts` registers four tools: `hello` (smoke), `get_orders`, `get_order_details`, `get_order_items` (Phase 1.5). No `get_inventory`, `get_report`, etc. exist yet.
+- `src/tools/` now exists and contains `sales.ts` (the canonical pattern for future tool families). `tests/fixtures/` exists for sample SP-API responses. `tests/mocks/` and `tests/e2e/` **do not exist** yet, even though README shows them.
 - The scripts `test:integration` / `test:e2e` exist in `package.json` but have no matching test files.
 - No `.github/`, no CI workflow, no pre-commit hooks — despite `TESTING.md` showing a sample GitHub Actions config.
 
-When picking up a new tool to add, expect to create the `src/tools/<name>.ts`, the matching `tests/unit/tools/<name>.test.ts`, the `src/utils/sp-api-client.ts` method, and a `server.registerTool(name, { description, inputSchema: { ...zod... } }, handler)` call in `src/index.ts`. Tools use the `McpServer` high-level API (SDK 1.10+), not the legacy `setRequestHandler` pattern.
+When picking up a new tool to add, follow the **tool family pattern** established in Phase 1.5:
+
+- Create `src/tools/<family>.ts` exporting a single `register<Family>Tools(server: McpServer, client: SPAPIClient): void` function.
+- Inside, define each tool's config (`description` + zod `inputSchema`) as a named export (`<family><Action>ToolConfig`) and its handler as a named export (`handle<Family><Action>`) so unit tests can call them directly without round-tripping through the MCP protocol.
+- `server.registerTool(name, config, handler)` wires them onto the `McpServer`.
+- Each method on `SPAPIClient` routes through the rate-limit bucket key that matches the SP-API section (`orders`, `inventory`, `reports`, etc.).
+- Use `src/utils/pagination.ts`'s `paginate<T>` for `nextToken`-driven list endpoints.
+- Tools use the `McpServer` high-level API (SDK 1.10+), not the legacy `setRequestHandler` pattern.
+- For one-tool-family = one-file; extract `_helpers.ts` only when duplication exceeds 3 lines across ≥2 families.
+
+See `src/tools/sales.ts` (Orders) as the canonical reference; tests live in `tests/unit/tools/<family>.test.ts` (unit) and `tests/integration/<family>-flow.test.ts` (integration with `nock`).
 
 ## Commands
 

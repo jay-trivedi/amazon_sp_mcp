@@ -1,0 +1,34 @@
+{
+  "payload": {
+    "Orders": [
+      {
+        "AmazonOrderId": "026-4567890-1234567",
+        "PurchaseDate": "2026-06-19T16:45:30Z",
+        "LastUpdateDate": "2026-06-19T17:00:00Z",
+        "OrderStatus": "Shipped",
+        "FulfillmentChannel": "AFN",
+        "NumberOfItemsShipped": 1,
+        "NumberOfItemsUnshipped": 0,
+        "OrderTotal": {
+          "Amount": "24.95",
+          "CurrencyCode": "USD"
+        },
+        "MarketplaceId": "ATVPDKIKX0DER"
+      },
+      {
+        "AmazonOrderId": "026-5678901-2345678",
+        "PurchaseDate": "2026-06-19T22:01:15Z",
+        "LastUpdateDate": "2026-06-19T22:01:15Z",
+        "OrderStatus": "Shipped",
+        "FulfillmentChannel": "MFN",
+        "NumberOfItemsShipped": 3,
+        "NumberOfItemsUnshipped": 0,
+        "OrderTotal": {
+          "Amount": "135.00",
+          "CurrencyCode": "USD"
+        },
+        "MarketplaceId": "ATVPDKIKX0DER"
+      }
+    ]
+  }
+}

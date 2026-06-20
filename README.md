@@ -327,13 +327,17 @@ Agent Actions:
 
 ## MCP Tools
 
-### Sales Tools
+### Sales Tools (Phase 1.5 — landed 2026-06-20)
 
-- `get_orders`: Retrieve orders within a date range
-- `get_order_details`: Get detailed information for a specific order
-- `get_sales_metrics`: Calculate sales metrics (revenue, units sold, etc.)
+- `get_orders`: Retrieve orders within a date range. Returns one page at a time (up to 100 orders); pass `nextToken` for the next page.
+- `get_order_details`: Get detailed information for a specific order.
+- `get_order_items`: Get the line items for a specific order. Auto-walks all pages (capped at 100).
 
-### Returns Tools
+### Sales Tools (deferred)
+
+- `get_sales_metrics` (Sales API) — follow-up change.
+
+### Returns Tools (Phase 2 — not yet implemented)
 
 - `get_returns`: Retrieve return requests
 - `get_return_details`: Get details for a specific return

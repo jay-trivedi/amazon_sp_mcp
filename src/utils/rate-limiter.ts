@@ -19,6 +19,15 @@ export interface RateLimitConfig {
    * If false, throws error immediately
    */
   queueRequests?: boolean;
+
+  /**
+   * When true, `acquire(key)` resolves immediately without consuming a token
+   * or queuing. Useful for integration tests that need to exercise the
+   * SP-API code path without waiting for the real rate limit. Default: false.
+   * The `disabled` flag is checked first and short-circuits the entire
+   * rate-limit logic, so disabled limiters have no side effects.
+   */
+  disabled?: boolean;
 }
 
 interface TokenBucket {
@@ -57,6 +66,13 @@ export class RateLimiter {
     const config = this.configs.get(key);
     if (!config) {
       throw new Error(`No rate limit configuration found for key: ${key}`);
+    }
+
+    // Disabled limiters short-circuit: no token consumption, no queue, no
+    // state. Used by integration tests that want to exercise the SP-API
+    // code path without waiting for the real rate limit.
+    if (config.disabled === true) {
+      return;
     }
 
     const bucket = this.getOrCreateBucket(key, config);

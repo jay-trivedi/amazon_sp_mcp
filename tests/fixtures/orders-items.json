@@ -1,0 +1,32 @@
+{
+  "payload": {
+    "AmazonOrderId": "026-1234567-8901234",
+    "OrderItems": [
+      {
+        "ASIN": "B08XYZ12345",
+        "SellerSKU": "ABC-001-RED",
+        "OrderItemId": "12345678901234",
+        "Title": "Example Widget Pro",
+        "QuantityOrdered": 1,
+        "QuantityShipped": 1,
+        "ItemPrice": {
+          "Amount": "29.99",
+          "CurrencyCode": "USD"
+        }
+      },
+      {
+        "ASIN": "B08ABC67890",
+        "SellerSKU": "ABC-002-BLUE",
+        "OrderItemId": "12345678901235",
+        "Title": "Example Gadget Plus",
+        "QuantityOrdered": 1,
+        "QuantityShipped": 1,
+        "ItemPrice": {
+          "Amount": "20.00",
+          "CurrencyCode": "USD"
+        }
+      }
+    ],
+    "NextToken": "items-page2-tok"
+  }
+}

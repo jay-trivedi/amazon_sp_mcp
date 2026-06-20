@@ -187,7 +187,7 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 
 ### Phase 1.5: Orders/Sales Tools
 
-**Status**: 🔄 NOT STARTED
+**Status**: ✅ COMPLETED (2026-06-20, see `feature/phase-1-5-orders-and-tooling`) — landed 3 tools (`get_orders`, `get_order_details`, `get_order_items`) plus the `paginate<T>` helper and the `src/tools/` directory scaffold. The roadmap's `get_sales_metrics` was deferred in favor of `get_order_items` (more universally useful for operational queries).
 **Duration**: ~1 week
 **Dependencies**: Phase 1.4
 
@@ -331,7 +331,7 @@ Phase 1 is divided into smaller sub-phases for easier implementation and trackin
 
 ### Phase 1.8: Integration, Polish & Documentation
 
-**Status**: 🔄 NOT STARTED (pre-work: `refactor/modernize-toolchain-and-mcp-sdk` landed 2026-06-19 — modernized TS 5.7→6.0, MCP SDK 1.0.4→1.29, ESLint 8→10, Jest 29→30, nock 13→14, CommonJS→ESM, added @typescript/native-preview as opt-in `type-check:fast`)
+**Status**: 🔄 NOT STARTED (pre-work: `refactor/modernize-toolchain-and-mcp-sdk` landed 2026-06-19 — modernized TS 5.7→6.0, MCP SDK 1.0.4→1.29, ESLint 8→10, Jest 29→30, nock 13→14, CommonJS→ESM, added @typescript/native-preview as opt-in `type-check:fast`. Phase 1.5 also landed 2026-06-20 via `feature/phase-1-5-orders-and-tooling` — added `get_orders`, `get_order_details`, `get_order_items` and the `paginate<T>` helper; established the `src/tools/` directory scaffold.)
 **Duration**: ~3-4 days
 **Dependencies**: Phases 1.5, 1.6, 1.7
 

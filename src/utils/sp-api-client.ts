@@ -10,6 +10,11 @@ import type {
   SPAPIErrorResponse,
   RetryConfig,
   AWSCredentials,
+  GetOrdersParams,
+  OrdersListResponse,
+  Order,
+  GetOrderItemsParams,
+  OrderItemsListResponse,
 } from '../types/sp-api.js';
 import { TokenManager } from '../auth/token-manager.js';
 import { signRequest } from './aws-signature.js';
@@ -282,5 +287,95 @@ export class SPAPIClient {
    */
   getMarketplaceId(): string {
     return this.marketplaceId;
+  }
+
+  /**
+   * Get orders in a date range, optionally filtered by status and marketplace.
+   * Routes through the `orders` rate-limit bucket (1 req/min per SP-API docs).
+   * Returns the raw `{ Orders, NextToken }` payload — the tool layer flattens it.
+   */
+  async getOrders(params: GetOrdersParams = {}): Promise<OrdersListResponse> {
+    const queryParams: Record<string, string | number | boolean> = {};
+
+    if (params.CreatedAfter) queryParams.CreatedAfter = params.CreatedAfter;
+    if (params.CreatedBefore) queryParams.CreatedBefore = params.CreatedBefore;
+    if (params.LastUpdatedAfter) queryParams.LastUpdatedAfter = params.LastUpdatedAfter;
+    if (params.LastUpdatedBefore) queryParams.LastUpdatedBefore = params.LastUpdatedBefore;
+    if (params.OrderStatuses && params.OrderStatuses.length > 0) {
+      queryParams.OrderStatuses = params.OrderStatuses.join(',');
+    }
+    if (params.MarketplaceIds && params.MarketplaceIds.length > 0) {
+      queryParams.MarketplaceIds = params.MarketplaceIds.join(',');
+    } else {
+      // Default to the configured marketplace
+      queryParams.MarketplaceIds = this.marketplaceId;
+    }
+    if (params.FulfillmentChannels && params.FulfillmentChannels.length > 0) {
+      queryParams.FulfillmentChannels = params.FulfillmentChannels.join(',');
+    }
+    if (params.PaymentMethods && params.PaymentMethods.length > 0) {
+      queryParams.PaymentMethods = params.PaymentMethods.join(',');
+    }
+    if (params.BuyerEmail) queryParams.BuyerEmail = params.BuyerEmail;
+    if (params.SellerOrderId) queryParams.SellerOrderId = params.SellerOrderId;
+    if (params.MaxResultsPerPage !== undefined) {
+      queryParams.MaxResultsPerPage = params.MaxResultsPerPage;
+    }
+    if (params.NextToken) queryParams.NextToken = params.NextToken;
+    if (params.EasyShipShipmentStatuses && params.EasyShipShipmentStatuses.length > 0) {
+      queryParams.EasyShipShipmentStatuses = params.EasyShipShipmentStatuses.join(',');
+    }
+
+    const response = await this.request<{ payload: OrdersListResponse }>(
+      {
+        method: 'GET',
+        path: '/orders/v0/orders',
+        queryParams,
+      },
+      'orders'
+    );
+
+    return response.data.payload;
+  }
+
+  /**
+   * Get a single order by Amazon Order ID.
+   * Routes through the `orders` rate-limit bucket.
+   * Returns the raw `Order` object (the SP-API Orders v0 single-order payload).
+   */
+  async getOrder(orderId: string): Promise<Order> {
+    const response = await this.request<{ payload: Order }>(
+      {
+        method: 'GET',
+        path: `/orders/v0/orders/${encodeURIComponent(orderId)}`,
+      },
+      'orders'
+    );
+
+    return response.data.payload;
+  }
+
+  /**
+   * Get the line items for an order, with optional `NextToken` continuation.
+   * Routes through the `orders` rate-limit bucket.
+   * Returns the raw `{ AmazonOrderId, OrderItems, NextToken }` payload.
+   */
+  async getOrderItems(
+    orderId: string,
+    params: GetOrderItemsParams = {}
+  ): Promise<OrderItemsListResponse> {
+    const queryParams: Record<string, string | number | boolean> = {};
+    if (params.NextToken) queryParams.NextToken = params.NextToken;
+
+    const response = await this.request<{ payload: OrderItemsListResponse }>(
+      {
+        method: 'GET',
+        path: `/orders/v0/orders/${encodeURIComponent(orderId)}/orderItems`,
+        queryParams,
+      },
+      'orders'
+    );
+
+    return response.data.payload;
   }
 }
